@@ -28,6 +28,26 @@ chmod 644 "$KNOWN_HOSTS_PATH"
 chmod 600 "$WPENGINE_SSH_KEY_PRIVATE_PATH"
 chmod 644 "$WPENGINE_SSH_KEY_PUBLIC_PATH"
 
+echo "Adding built files that are normally .gitignored..."
+array=()
+get_array "_build/.deploy_include.txt"
+for e in "${array[@]}"
+do
+    printf "$e\n"
+    git add "$e" -f
+done
+
+echo "Removing files we don't want on the server..."
+array=()
+get_array "_build/.deploy_exclude.txt"
+for e in "${array[@]}"
+do
+    git rm -r --ignore-unmatch "$e"
+done
+
+echo "Committing build changes..."
+git commit -m "Committing build changes"
+
 git config core.sshCommand "ssh -i $WPENGINE_SSH_KEY_PRIVATE_PATH -o UserKnownHostsFile=$KNOWN_HOSTS_PATH"
 git remote add $WPENGINE_ENV git@$WPENGINE_HOST:$WPENGINE_ENV/$WPENGINE_ENVIRONMENT_NAME.git
 git push -fu $WPENGINE_ENV $BRANCH:master
