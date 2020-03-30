@@ -16,6 +16,10 @@ WPENGINE_ENV=${WPENGINE_ENVIRONMENT:-$WPENGINE_ENVIRONMENT_DEFAULT}
 LOCAL_BRANCH_DEFAULT="master"
 BRANCH=${LOCAL_BRANCH:-$LOCAL_BRANCH_DEFAULT}
 
+echo -e "Host git.wpengine.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+git config --global user.email "hello+bubs@patronage.org"
+git config --global user.name "Bubs Deploy"
+
 mkdir "$SSH_PATH"
 
 ssh-keyscan -t rsa "$WPENGINE_HOST" >> "$KNOWN_HOSTS_PATH"
