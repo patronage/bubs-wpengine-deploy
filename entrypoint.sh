@@ -28,9 +28,11 @@ chmod 644 "$KNOWN_HOSTS_PATH"
 chmod 600 "$WPENGINE_SSH_KEY_PRIVATE_PATH"
 chmod 644 "$WPENGINE_SSH_KEY_PUBLIC_PATH"
 
+echo $BASH_VERSION
+
 echo "Adding built files that are normally .gitignored..."
 array=()
-get_array "_build/.deploy_include.txt"
+mapfile -t array < _build/.deploy_include.txt
 for e in "${array[@]}"
 do
     printf "$e\n"
@@ -39,7 +41,7 @@ done
 
 echo "Removing files we don't want on the server..."
 array=()
-get_array "_build/.deploy_exclude.txt"
+mapfile -t array < _build/.deploy_exclude.txt
 for e in "${array[@]}"
 do
     git rm -r --ignore-unmatch "$e"
